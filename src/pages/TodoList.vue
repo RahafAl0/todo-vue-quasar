@@ -24,11 +24,7 @@
       class="bg-white"
       separator
       bordered>
-      <!--
-        Rendering a <label> tag (notice tag="label")
-        so QCheckboxes will respond to clicks on QItems to
-        change Toggle state.
-      -->
+
 
       <q-item
         v-for="(task, index) in tasks"
@@ -78,59 +74,44 @@
 </template>
 
 
-<script setup lang="js">
-
+<script setup lang="ts">
+import { defineProps } from 'vue';
 // import { ref } from 'vue';
-// import { Todo, Meta } from 'components/models';
 
-defineOptions({
-  name: 'TodoList',
-  data() {
-    return {
-      tasks: [
-        {
-          title: 'Task 1',
-          done: false
-        },
-        {
-          title: 'Task 2',
-          done: false
-        },
-        {
-          title: 'Task 3',
-          done: false
-        }
-      ]
-    };
-  },
-  methods: {
-    deleteTask (index) {
-      this.$q.dialog({
-        title: 'Confirm',
-        message: 'Really delete?',
-        cancel: true,
-        persistent: true
-      }).onOk(() => {
-        const deletedTask = this.tasks[index].title
-        this.tasks.splice(index, 1)
-        this.$q.notify('Task: ' + "'" + deletedTask + "'" + ' Deleted')
-      }).onOk(() => {
-        // console.log('>>>> second OK catcher')
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
-      })
-    },
-    addTask () {
-      this.tasks.push({
-        title: this.newTask,
-        done: false
-      })
-      this.newTask = ''
-}
-  }
-});
+const props = defineProps<{
+  tasks: Array<{
+    title: string;
+    done: boolean;
+  }>;
+}>();
+
+const { tasks = props.tasks || [
+  { title: 'Learn Vue 3', done: false },
+  { title: 'Learn Quasar', done: false },
+  { title: 'Build an app', done: false },
+  { title: 'Deploy it', done: false },
+  { title: 'Share it', done: false },
+] } = props;
+
+let newTask = '';
+
+
+
+
+const addTask = () => {
+  tasks.push({
+    title: newTask,
+    done: false
+  });
+  newTask = '';
+};
+
+const deleteTask = (index: number) => {
+  const deletedTask = tasks[index].title;
+  tasks.splice(index, 1);
+  console.log('Task deleted:', deletedTask);
+};
+
 </script>
 
 <style scoped>
